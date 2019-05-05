@@ -1,0 +1,9 @@
+---
+- hosts: nginx-dev
+  tags: nginx
+  become: yes
+#    become_user:root
+#  remote_user: xys
+  roles:
+    - docker-image-run
+

@@ -1,0 +1,21 @@
+---
+# tasks file for docker-image-run
+- name: pull an image
+  docker_image:
+    name: nginx
+
+- name: Run docker image
+  docker_service:
+        project_name: some-nginx
+        definition:
+          version: '2'
+          services:
+            nginx:
+              image: nginx
+#              volumes:/usr/share/nginx/html:/usr/share/nginx/html
+              ports:
+                - "80:80"
+#      register: output
+
+#  - debug:
+#        var: output

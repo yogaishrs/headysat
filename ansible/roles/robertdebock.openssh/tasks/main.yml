@@ -1,0 +1,50 @@
+---
+# tasks file for openssh
+- name: install openssh
+  package:
+    name: "{{ openssh_packages }}"
+    state: present
+  register: openssh_install_openssh
+  until: openssh_install_openssh
+  retries: 3
+
+- name: configure selinux to allow openssh_port
+  seport:
+    ports: "{{ openssh_port }}"
+    proto: "tcp"
+    setype: "ssh_port_t"
+    state: "present"
+  when:
+    - ansible_selinux.status is defined
+    - ansible_selinux.status == "enabled"
+
+- name: generate host key
+  command: "/usr/bin/ssh-keygen -q -t {{ item }} -f /etc/ssh/ssh_host_{{ item }}_key -C '' -N ''"
+  args:
+    creates: "/etc/ssh/ssh_host_{{ item }}_key"
+  with_items:
+    - "{{ openssh_key_types }}"
+
+- name: make run directory
+  file:
+    path: "{{ openssh_run_directory }}"
+    state: directory
+
+- name: configure openssh
+  template:
+    dest: "{{ openssh_configuration_file }}"
+    src: "{{ openssh_template_src }}"
+    mode: "{{ openssh_template_mode }}"
+    owner: root
+    group: root
+    validate: sshd -f %s -t
+  notify:
+    - restart openssh
+
+- name: start and enable openssh
+  service:
+    name: "{{ openssh_service }}"
+    state: started
+    enabled: yes
+  when:
+    - ansible_virtualization_type != "docker"
