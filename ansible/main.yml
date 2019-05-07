@@ -3,7 +3,7 @@
 - hosts: all
   become: yes
 #    become_user:root
-#  remote_user: yog
+  remote_user: yog
   roles:
      - role: ansible-role-jenkins
        tags: jenkins
