@@ -1,12 +1,18 @@
+
 ---
-- hosts: nginx-dev
-  tags: nginx
+- hosts: all
   become: yes
 #    become_user:root
-  remote_user: yog
+#  remote_user: yog
   roles:
-    - ansible-role-docker
-#    - ansible-role-nginx
+     - role: ansible-role-jenkins
+       tags: jenkins
+     - role: ansible-role-docker
+       tags: docker
+     - role: docker-nodejs-run
+       tags: nodejs
+     - role: docker-nginx-run
+       tags: nginx
   vars:
       docker_package: docker.io
 

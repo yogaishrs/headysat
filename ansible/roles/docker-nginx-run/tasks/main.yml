@@ -1,0 +1,32 @@
+---
+# tasks file for docker-image-run
+- name: Copy a nginx conf.d dir
+  copy:
+    src:  ../files/conf.d
+    dest: /etc/nginx/
+    owner: root
+    group: root
+    mode: 0644
+
+- name: pull an image
+  docker_image:
+    name: nginx
+    force: yes
+
+- name: Run docker image
+  docker_service:
+        recreate: always
+        project_name: some-nginx
+        definition:
+          version: '2'
+          services:
+            nginx:
+              image: nginx
+              volumes:
+                - "/etc/nginx/conf.d:/etc/nginx/conf.d"
+              ports:
+                - "80:80"
+#      register: output
+
+#  - debug:
+#        var: output
