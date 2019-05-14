@@ -1,0 +1,21 @@
+---------------------------------------------------------------------------
+Task 2
+lsof -P | wc -l  "Will give list of open files on system"
+lsof -p  <pid> |wc -l                       "Will give list of open files by jvm pid underwhich weblogic server is running"
+
+Also check it with
+cat /proc/sys/fs/file-max
+
+set the ulimit -n" value in "<WL_HOME>\common\bin\commEnv.sh" script.
+
+----------------------------------------------------------
+Task 3
+check disk usage of /usr/src/ directory
+du -sh /usr/src/* |sort -u
+If required check the disk usage recursively by once again firing above command to check which file/directory using disk space for eg.
+du -sh /usr/src/app/* | sort -u
+
+Possible causes of disk space full:The most common cause of disk space is continuous log file creation/updation.Also check if the log file is continuously generating errors and because of that the disk space is getting full.
+
+-------------------------------------------------------
+
